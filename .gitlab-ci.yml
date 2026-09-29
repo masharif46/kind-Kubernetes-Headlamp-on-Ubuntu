@@ -1,0 +1,15 @@
+stages:
+  - validate
+
+shell-validation:
+  stage: validate
+  image: ubuntu:24.04
+  before_script:
+    - apt-get update
+    - DEBIAN_FRONTEND=noninteractive apt-get install -y bash shellcheck
+  script:
+    - bash -n install-kind.sh cluster-kind.sh install-headlamp.sh test-ha.sh uninstall-kind.sh
+    - shellcheck install-kind.sh cluster-kind.sh install-headlamp.sh test-ha.sh uninstall-kind.sh
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push"'
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'

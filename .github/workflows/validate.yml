@@ -1,0 +1,21 @@
+name: Validate scripts
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  shell:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install ShellCheck
+        run: sudo apt-get update && sudo apt-get install -y shellcheck
+
+      - name: Validate Bash syntax
+        run: bash -n install-kind.sh cluster-kind.sh install-headlamp.sh test-ha.sh uninstall-kind.sh
+
+      - name: Run ShellCheck
+        run: shellcheck install-kind.sh cluster-kind.sh install-headlamp.sh test-ha.sh uninstall-kind.sh
